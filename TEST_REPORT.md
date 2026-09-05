@@ -40,6 +40,16 @@ Esto comprueba que la generación de marcas de tiempo no acumula un error numér
 - Presencia de todos los controles requeridos por la interfaz.
 - Sintaxis válida de todos los archivos JavaScript.
 
+## Publicación y comprobación remota
+
+- GitHub Pages completó correctamente la compilación y el despliegue de la rama `gh-pages`.
+- La página principal respondió mediante HTTPS con estado `200 OK` y HSTS activo.
+- Se descargaron desde la dirección pública los 15 archivos de la PWA y se compararon byte por byte con `dist`: todos coincidieron.
+- El manifiesto se entregó como `application/manifest+json` y el service worker como `application/javascript`.
+- En un navegador controlado se verificó la carga de la interfaz, el cambio de 120 a 121 BPM, el paso `INICIAR → DETENER → INICIAR`, la detección del manifiesto y la ausencia de desbordamiento horizontal.
+- Los controles principales medidos superaron 44 px: ± de 72 × 72 px, Inicio de 71 px de alto y Tap de 71 px de alto.
+- No aparecieron errores JavaScript originados por Tempo durante esa prueba.
+
 ## Comprobación pendiente en dispositivo real
 
-Este entorno no dispone de Safari para iPhone ni de salida de audio física. Por eso no se afirma una medición de latencia acústica ni una prueba real de bloqueo/segundo plano. La validación final en iPhone debe hacerse después de un despliegue HTTPS autorizado, comprobando sonido, volumen, modo silencio del teléfono, Wake Lock, cambio de aplicación y pantalla bloqueada.
+Este entorno no dispone de Safari para iPhone ni de salida de audio física. Por eso no se afirma una medición de latencia acústica ni una prueba real de bloqueo/segundo plano. La validación final en el iPhone debe comprobar sonido, volumen, modo silencio del teléfono, Wake Lock, cambio de aplicación y pantalla bloqueada.
