@@ -1,0 +1,28 @@
+{
+  "id": "./",
+  "name": "Tempo · Metrónomo de estudio",
+  "short_name": "Tempo",
+  "description": "Metrónomo de precisión para piano y repertorio clásico.",
+  "lang": "es-AR",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#080c12",
+  "theme_color": "#0b1017",
+  "categories": ["music", "education", "utilities"],
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

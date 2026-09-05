@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#0b1017">
+    <meta name="description" content="Metrónomo de precisión para estudio de piano y repertorio clásico.">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Tempo">
+    <meta name="format-detection" content="telephone=no">
+    <title>Tempo · Metrónomo</title>
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Ir al metrónomo</a>
+    <div class="app-shell">
+      <header class="app-header">
+        <div class="brand" aria-label="Tempo, metrónomo de estudio">
+          <span class="brand-mark" aria-hidden="true">♩</span>
+          <span>TEMPO</span>
+        </div>
+        <div class="header-actions">
+          <span id="connection-status" class="connection-status" aria-live="polite">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span id="connection-label">En línea</span>
+          </span>
+          <button id="install-help-button" class="icon-button" type="button" aria-label="Cómo instalar en iPhone">?</button>
+        </div>
+      </header>
+
+      <main id="main">
+        <section class="metronome-card" aria-labelledby="tempo-heading">
+          <h1 id="tempo-heading" class="visually-hidden">Metrónomo</h1>
+
+          <div class="mode-line" aria-live="polite">
+            <span id="mode-badge" class="mode-badge">LISTO</span>
+            <span id="measure-status">4/4 · Pulso principal</span>
+          </div>
+
+          <div class="tempo-control">
+            <button id="decrease-bpm" class="step-button" type="button" aria-label="Bajar un BPM">−</button>
+            <label class="tempo-readout" for="bpm-input">
+              <span class="beat-unit" id="beat-unit" aria-hidden="true">♩</span>
+              <input id="bpm-input" type="number" inputmode="numeric" min="30" max="300" step="1" value="120" aria-describedby="bpm-range">
+              <span class="bpm-label">BPM</span>
+            </label>
+            <button id="increase-bpm" class="step-button" type="button" aria-label="Subir un BPM">+</button>
+          </div>
+          <p id="bpm-range" class="visually-hidden">Rango de 30 a 300 pulsos por minuto</p>
+
+          <div id="pulse-track" class="pulse-track" aria-label="Indicador visual de pulsos"></div>
+
+          <button id="resume-audio" class="resume-button" type="button" hidden>REANUDAR AUDIO</button>
+
+          <div class="transport">
+            <button id="start-stop" class="start-button" type="button">
+              <span class="transport-icon" aria-hidden="true">▶</span>
+              <span>INICIAR</span>
+            </button>
+            <button id="tap-tempo" class="tap-button" type="button">
+              <span>TAP</span>
+              <small id="tap-feedback">marcá 4 pulsos</small>
+            </button>
+          </div>
+
+          <div class="quick-settings">
+            <label>
+              <span>Compás</span>
+              <select id="meter-select">
+                <option value="2/4">2/4</option>
+                <option value="3/4">3/4</option>
+                <option value="4/4">4/4</option>
+                <option value="6/8">6/8</option>
+                <option value="9/8">9/8</option>
+                <option value="12/8">12/8</option>
+              </select>
+            </label>
+            <label>
+              <span>Subdivisión</span>
+              <select id="subdivision-select">
+                <option value="main">Pulso principal</option>
+                <option value="eighths">Corcheas</option>
+                <option value="triplets">Tresillos</option>
+                <option value="sixteenths">Semicorcheas</option>
+              </select>
+            </label>
+          </div>
+
+          <div id="favorites-section" class="quick-strip" hidden>
+            <span class="strip-label">Favoritos</span>
+            <div id="favorites-list" class="chip-row"></div>
+          </div>
+
+          <div class="quick-strip">
+            <span class="strip-label">Recientes</span>
+            <div id="history-list" class="chip-row"></div>
+          </div>
+        </section>
+
+        <section class="advanced-panels" aria-label="Funciones avanzadas">
+          <details>
+            <summary>
+              <span>Sonido y cuenta</span>
+              <span class="summary-value" id="sound-summary">Madera · 68%</span>
+            </summary>
+            <div class="panel-content">
+              <label class="field-row" for="sound-select">
+                <span>
+                  <strong>Tipo de clic</strong>
+                  <small>Tres timbres suaves y diferenciados</small>
+                </span>
+                <select id="sound-select">
+                  <option value="wood">Madera</option>
+                  <option value="classic">Clásico</option>
+                  <option value="digital">Digital</option>
+                </select>
+              </label>
+
+              <label class="volume-field" for="volume-input">
+                <span>
+                  <strong>Volumen</strong>
+                  <output id="volume-output">68%</output>
+                </span>
+                <input id="volume-input" type="range" min="0" max="100" step="1" value="68">
+              </label>
+
+              <label class="field-row" for="count-in-select">
+                <span>
+                  <strong>Cuenta previa</strong>
+                  <small>Antes de comenzar el ejercicio</small>
+                </span>
+                <select id="count-in-select">
+                  <option value="0">Sin cuenta</option>
+                  <option value="1">1 compás</option>
+                  <option value="2">2 compases</option>
+                </select>
+              </label>
+
+              <label class="switch-row" for="accent-enabled">
+                <span>
+                  <strong>Acentos</strong>
+                  <small>Diferenciar tiempos elegidos</small>
+                </span>
+                <span class="switch">
+                  <input id="accent-enabled" type="checkbox" role="switch" checked>
+                  <span aria-hidden="true"></span>
+                </span>
+              </label>
+
+              <div id="accent-editor" class="accent-editor">
+                <span class="field-caption">Tiempos acentuados</span>
+                <div id="accent-beats" class="beat-choice-row"></div>
+              </div>
+            </div>
+          </details>
+
+          <details>
+            <summary>
+              <span>Práctica</span>
+              <span class="summary-value" id="practice-summary">Desactivada</span>
+            </summary>
+            <div class="panel-content practice-content">
+              <div class="practice-block">
+                <label class="switch-row" for="progressive-enabled">
+                  <span>
+                    <strong>Tempo progresivo</strong>
+                    <small>Aumenta o reduce por etapas</small>
+                  </span>
+                  <span class="switch">
+                    <input id="progressive-enabled" type="checkbox" role="switch">
+                    <span aria-hidden="true"></span>
+                  </span>
+                </label>
+                <div id="progressive-fields" class="number-grid">
+                  <label>Inicio<input id="progressive-start" type="number" inputmode="numeric" min="30" max="300" value="80"><span>BPM</span></label>
+                  <label>Meta<input id="progressive-target" type="number" inputmode="numeric" min="30" max="300" value="120"><span>BPM</span></label>
+                  <label>Incremento<input id="progressive-step" type="number" inputmode="numeric" min="1" max="40" value="4"><span>BPM</span></label>
+                  <label>Cada<input id="progressive-bars" type="number" inputmode="numeric" min="1" max="64" value="4"><span>compases</span></label>
+                </div>
+                <div id="progressive-progress" class="practice-progress" hidden>
+                  <div><span id="progressive-status">80 → 120</span><span id="progressive-percent">0%</span></div>
+                  <div class="progress-track"><span id="progressive-bar"></span></div>
+                </div>
+              </div>
+
+              <div class="practice-block">
+                <label class="switch-row" for="silent-enabled">
+                  <span>
+                    <strong>Pulso interno</strong>
+                    <small>Alterna sonido y silencio</small>
+                  </span>
+                  <span class="switch">
+                    <input id="silent-enabled" type="checkbox" role="switch">
+                    <span aria-hidden="true"></span>
+                  </span>
+                </label>
+                <div id="silent-fields" class="number-grid two-columns">
+                  <label>Con sonido<input id="silent-sound-bars" type="number" inputmode="numeric" min="1" max="32" value="4"><span>compases</span></label>
+                  <label>En silencio<input id="silent-muted-bars" type="number" inputmode="numeric" min="1" max="32" value="2"><span>compases</span></label>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <details>
+            <summary>
+              <span>Obras guardadas</span>
+              <span class="summary-value" id="preset-count">1 preset</span>
+            </summary>
+            <div class="panel-content">
+              <button id="save-preset" class="secondary-button" type="button">Guardar configuración actual</button>
+              <div id="preset-list" class="preset-list"></div>
+            </div>
+          </details>
+
+          <details>
+            <summary>
+              <span>Uso en iPhone</span>
+              <span class="summary-value" id="offline-summary">Preparando offline</span>
+            </summary>
+            <div class="panel-content info-copy">
+              <p><strong>Instalación:</strong> abrí esta página en Safari, tocá Compartir y elegí “Añadir a pantalla de inicio”.</p>
+              <p><strong>Audio:</strong> el primer inicio requiere tocar INICIAR. iOS puede suspender el audio al bloquear la pantalla o cambiar de aplicación.</p>
+              <p id="wake-lock-note"><strong>Pantalla:</strong> se intentará mantener encendida mientras el metrónomo esté en marcha.</p>
+            </div>
+          </details>
+        </section>
+      </main>
+
+      <footer>
+        <span>30–300 BPM</span>
+        <span aria-hidden="true">·</span>
+        <span>Web Audio</span>
+        <span aria-hidden="true">·</span>
+        <span>Sin cuenta</span>
+      </footer>
+    </div>
+
+    <dialog id="preset-dialog" class="modal">
+      <form id="preset-form" method="dialog">
+        <div class="modal-header">
+          <div>
+            <span class="eyebrow">NUEVO PRESET</span>
+            <h2>Guardar obra</h2>
+          </div>
+          <button class="close-button" type="button" data-close-dialog="preset-dialog" aria-label="Cerrar">×</button>
+        </div>
+        <label>Compositor<input id="preset-composer" name="composer" autocomplete="off" maxlength="80" required placeholder="Mozart"></label>
+        <label>Obra<input id="preset-work" name="work" autocomplete="off" maxlength="140" required placeholder="Concierto para piano n.º 23 K.488"></label>
+        <label>Movimiento<input id="preset-movement" name="movement" autocomplete="off" maxlength="100" placeholder="I. Allegro"></label>
+        <div class="preset-preview" id="preset-preview">♩ = 120 · 4/4 · Pulso principal</div>
+        <div class="modal-actions">
+          <button class="text-button" type="button" data-close-dialog="preset-dialog">Cancelar</button>
+          <button class="primary-small-button" type="submit">Guardar preset</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="install-dialog" class="modal">
+      <div class="modal-header">
+        <div>
+          <span class="eyebrow">IPHONE</span>
+          <h2>Instalar Tempo</h2>
+        </div>
+        <button class="close-button" type="button" data-close-dialog="install-dialog" aria-label="Cerrar">×</button>
+      </div>
+      <ol class="install-steps">
+        <li>Abrí el enlace en <strong>Safari</strong>.</li>
+        <li>Tocá <strong>Compartir</strong> <span aria-hidden="true">□↑</span>.</li>
+        <li>Elegí <strong>Añadir a pantalla de inicio</strong>.</li>
+        <li>Confirmá con <strong>Añadir</strong>.</li>
+      </ol>
+      <p class="dialog-note">Después del primer acceso completo, los archivos esenciales quedan guardados para usar el metrónomo sin conexión.</p>
+      <button class="primary-small-button full-width" type="button" data-close-dialog="install-dialog">Entendido</button>
+    </dialog>
+
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+    <div id="sr-status" class="visually-hidden" role="status" aria-live="polite"></div>
+
+    <script type="module" src="./js/app.js"></script>
+  </body>
+</html>
